@@ -1,0 +1,24 @@
+name: Expected to Fail Matrix
+
+on:
+  workflow_dispatch:
+  schedule: # At :30 in every 4th hour
+    - cron: '30 */4 * * *'
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        workload: [append, lock-set, register] # lock-etcd-set, set, watch, wr
+        nemesis:
+          ['admin', 'pause,admin', 'kill,admin', 'partition,admin', 'member,admin',
+           'pause'] # 'bitflip-wal,bitflip-snap,admin' 'bitflip-wal,bitflip-snap,kill'
+    uses: nurturenature/jepsen-docker/.github/workflows/compose-jepsen-run-test.yml@main
+    with:
+      test-org: nurturenature
+      test-repo: etcd
+      test-ref: jepsen-0.3.2
+      workload: ${{ matrix.workload }}
+      nemesis: ${{ matrix.nemesis }}
+      cli-opts: --concurrency 2n --rate 1000 --time-limit 120

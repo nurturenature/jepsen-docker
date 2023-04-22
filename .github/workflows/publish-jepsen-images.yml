@@ -1,0 +1,53 @@
+name: Publish Jepsen Images
+
+on:
+  workflow_dispatch:
+  schedule: # @daily
+    - cron: '0 0 * * *'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  publish-jepsen-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Clone Jepsen
+        run: |
+          git clone --depth 1 --branch main https://github.com/nurturenature/jepsen-docker.git
+          git clone --depth 1 --branch jepsen-docker https://github.com/nurturenature/jepsen.git
+          
+      - name: Build Jepsen Cluster
+        run: |
+          cd jepsen/docker
+          ./bin/up --build-only --compose ../../jepsen-docker/docker-compose.github-config.yml
+          cd ../..
+
+      - name: Docker Images
+        run: |
+          echo Built docker images:
+          docker images
+
+      - name: Login to Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag Images
+        run: |
+          docker tag jepsen_node    ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_node
+          docker tag jepsen_control ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_control
+          echo Tagged docker images:
+          docker images
+
+      - name: Push Images
+        run: |
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_node
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_control
