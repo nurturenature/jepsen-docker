@@ -1,0 +1,13 @@
+services:
+  setup:
+    depends_on:
+      electric:
+        condition: service_healthy
+
+  postgres:
+    networks:
+      - jepsen
+
+  electric:
+    networks:
+      - jepsen
