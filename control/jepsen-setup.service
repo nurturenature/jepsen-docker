@@ -1,0 +1,11 @@
+[Unit]
+Description=Jepsen Setup
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/jepsen-setup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

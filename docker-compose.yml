@@ -1,28 +1,35 @@
-x-debian:
-  # See https://salsa.debian.org/jgoerzen/docker-debian-base
-  &default-debian
-  image: jgoerzen/debian-base-standard
+name: jepsen
+
+x-defaults:
+  &defaults
+  privileged: true
+  cap_add:
+    - ALL
   cgroup: host
   tty: true
   stop_signal: SIGRTMIN+3
-  volumes:
-    - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    - "jepsen-shared:/var/jepsen/shared"
   tmpfs:
     - /run:size=100M
     - /run/lock:size=100M
+  volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    - jepsen-shared:/var/jepsen/shared
   networks:
     - jepsen
-  
+  healthcheck:
+    test: [ 'CMD-SHELL', 'systemctl', 'is-system-running' ]
+    interval: 1s
+    timeout: 1s
+    retries: 3
+    start_period: 3s
+
 x-node:
   &default-node
-  << : *default-debian
-  image: ${JEPSEN_REGISTRY:-}jepsen_node
+  << : *defaults
+  image: jepsen_node
   build: ./node
-  cap_add:
-    - ALL
   ports:
-    - ${JEPSEN_PORT:-22}
+    - 22
   depends_on: 
     setup:
       condition: service_completed_successfully
@@ -35,26 +42,22 @@ networks:
 
 services:
   setup:
-    << : *default-debian
+    << : *defaults
+    image: jepsen_setup
+    build: ./setup
     container_name: jepsen-setup
     hostname: setup
-    command:
-      - sh
-      - -c
-      - |
-        echo "Clean shared state, generate new ssh keys for control node" | tee -a /var/log/jepsen-setup.log
-        rm -rf /var/jepsen/shared/*
-        mkdir  /var/jepsen/shared/secrets
-        ssh-keygen -t rsa -N "" -f /var/jepsen/shared/secrets/control-id_rsa
+    entrypoint: [ '/usr/local/bin/jepsen-setup.sh' ] 
+
   control:
-    << : *default-debian
-    image: ${JEPSEN_REGISTRY:-}jepsen_control
+    << : *defaults
+    image: jepsen_control
     build: ./control
     container_name: jepsen-control
     hostname: control
     ports:
-      - "22"
-      - "8080"
+      - 22
+      - 8080
     depends_on:
       n1:
         condition: service_healthy
@@ -66,7 +69,7 @@ services:
         condition: service_healthy
       n5:
         condition: service_healthy
-
+    
   n1:
     << : *default-node
     container_name: jepsen-n1
@@ -87,4 +90,3 @@ services:
     << : *default-node
     container_name: jepsen-n5
     hostname: n5
-
