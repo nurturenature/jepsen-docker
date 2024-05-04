@@ -42,6 +42,7 @@ services:
       LOGICAL_PUBLISHER_HOST: electric
       PG_PROXY_PASSWORD: proxy_password
       AUTH_MODE: insecure
+      LOG_LEVEL: debug
     ports:
       - ${ELECTRIC_PORT:-5133}:5133
       - ${ELECTRIC_PROXY_PORT:-65432}:65432

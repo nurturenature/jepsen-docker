@@ -42,6 +42,8 @@ ADD ./jepsen-setup.service /etc/systemd/system/jepsen-setup.service
 RUN systemctl enable jepsen-setup.service
 
 ENV ROOT_PASS=root
+ADD ./root.password /jepsen/root.password
+RUN passwd root < /jepsen/root.password
 
 EXPOSE 22
 

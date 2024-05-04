@@ -1,6 +1,3 @@
-#!/bin/bash
-set -e
-
 eval "$(ssh-agent)" &> /dev/null
 ssh-add /root/.ssh/id_rsa &> /dev/null
 
@@ -9,4 +6,4 @@ Welcome to Jepsen on Docker
 ===========================
 EOF
 
-cd /jepsen
+cd /jepsen || return 1
