@@ -26,10 +26,7 @@ x-defaults:
 x-node:
   &default-node
   << : *defaults
-  image: jepsen_node
-  build: ./node
-  ports:
-    - 22
+  image: jepsen-node
   depends_on: 
     setup:
       condition: service_completed_successfully
@@ -43,21 +40,18 @@ networks:
 services:
   setup:
     << : *defaults
-    image: jepsen_setup
-    build: ./setup
+    image: jepsen-setup
     container_name: jepsen-setup
     hostname: setup
     entrypoint: [ '/usr/local/bin/jepsen-setup.sh' ] 
 
   control:
     << : *defaults
-    image: jepsen_control
-    build: ./control
+    image: jepsen-control
     container_name: jepsen-control
     hostname: control
     ports:
-      - 22
-      - 8080
+      - 8080:8080
     depends_on:
       n1:
         condition: service_healthy

@@ -1,5 +1,5 @@
-FROM jgoerzen/debian-base-minimal:bookworm as debian-addons
-FROM debian:bookworm-slim
+FROM jgoerzen/debian-base-minimal:bookworm AS debian-addons
+FROM debian:bookworm-slim AS jepsen-setup
 
 COPY --from=debian-addons /usr/local/preinit/ /usr/local/preinit/
 COPY --from=debian-addons /usr/local/bin/ /usr/local/bin/
@@ -45,3 +45,14 @@ ADD ./bashrc /root/.bashrc
 RUN dos2unix /root/.bashrc
 
 ENTRYPOINT [ "/usr/local/bin/boot-debian-base" ]
+
+#
+# Custom ElectricSQL control
+#
+FROM jepsen-setup AS jepsen-control
+
+# jepsen-causal-consistency
+RUN git clone --depth 1 --branch main \
+    "https://github.com/nurturenature/jepsen-causal-consistency.git" \
+    /jepsen/jepsen-causal-consistency
+RUN cd /jepsen/jepsen-causal-consistency && lein deps

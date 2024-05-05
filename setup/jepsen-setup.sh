@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "Removing shared Jepsen state" >> /var/log/jepsen-setup.log
 rm -rf /var/jepsen/shared/*

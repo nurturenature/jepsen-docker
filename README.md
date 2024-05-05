@@ -25,19 +25,19 @@ lein run serve
 http://localhost:8080
 ```
 
+ElectricSQL
+
 ```bash
-docker compose -f electricsql-compose.yaml -f docker-compose.yaml -f jepsen-electricsql-compose.yaml up
+./electricsql-build.sh
 
-# open a shell into the control node
-docker exec -it jepsen-control bash
+./electricsql-up.sh
 
-# checkout repository with Jepsen test
-git clone --depth 1 --branch main https://github.com/nurturenature/jepsen-causal-consistency.git
+./electricsql-run-migrations.sh
 
-# run test
-cd jepsen-causal
-lein run test --workload lww-intermediate-read --rate 10 --time-limit 30
+./electricsql-web.sh
 
-docker compose -f electricsql-compose.yaml -f docker-compose.yaml -f jepsen-electricsql-compose.yaml down
+./electricsql-run-test.sh
+
+./electricsql-down.sh
 
 ```
