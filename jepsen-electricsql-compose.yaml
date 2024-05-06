@@ -11,3 +11,17 @@ services:
   electric:
     networks:
       - jepsen
+
+  control:
+    image: electricsql-control
+
+  n1:
+    image: electricsql-node
+  n2:
+    image: electricsql-node
+  n3:
+    image: electricsql-node
+  n4:
+    image: electricsql-node
+  n5:
+    image: electricsql-node
