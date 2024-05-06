@@ -1,52 +1,35 @@
-name: 'ElectricSQL: Intermediate Read'
+name: 'ElectricSQL: Intermediate-Read'
 
 on:
   workflow_dispatch:
 
 jobs:
-  compose-jepsen-run-test:
+  electricsql-intermediate-read:
     runs-on: ubuntu-latest
 
-    steps:          
-      - name: Clone jepsen and ${{ inputs.test-repo }}
+    steps:  
+      - name: Checkout jepsen-docker
+        uses: actions/checkout@v4
+        
+      - name: Run Intermediate-Read Jepsen Test
         run: |
-          git clone --depth 1 --branch main https://github.com/nurturenature/jepsen-docker.git
-          git clone --depth 1 --branch jepsen-docker https://github.com/nurturenature/jepsen.git
-          git clone --depth 1 --branch ${{ inputs.test-ref }} https://github.com/${{ inputs.test-org }}/${{ inputs.test-repo }}.git
+          cd $GITHUB_WORKSPACE
+          ./electricsql-build.sh
+          ./electricsql-up.sh
+          ./electricsql-run-migrations.sh
+          ./electricsql-intermediate-reads.sh
 
-      - name: Docker Compose a Jepsen Cluster
+      - name: ElectricSQL and PostgreSQL Logs
         run: |
-          JEPSEN_ROOT="$(pwd)/${{ inputs.test-repo }}" && export JEPSEN_ROOT
-          cd jepsen/docker
-          ./bin/up --registry ghcr.io/nurturenature/jepsen-docker/ --daemon --dev --compose ../../jepsen-docker/docker-compose.github-config.yml
-          cd ../..
-
-      - name: Docker Logs
-        run: |
-          echo "jepsen-n1 docker logs:"
-          docker logs --details jepsen-n1
-          echo "jepsen-control docker logs:"
-          docker logs --details jepsen-control
-          echo "Docker images:"
-          docker images
-          echo "Docker ps:"
-          docker ps
-
-      - name: Test Jepsen Cluster
-        run: |
-          docker exec --env BASH_ENV=/root/.bashrc jepsen-control bash -c "ssh root@n1 hostname"
+          docker logs --details electric >> $GITHUB_WORKSPACE/store/latest/electricsql.log 
+          docker logs --details postgres >> $GITHUB_WORKSPACE/store/latest/postgresql.log 
           
-      - name: ${{ inputs.test-repo }} - ${{ inputs.workload }} - ${{ inputs.nemesis }}
-        run: |
-          docker exec --env BASH_ENV=/root/.bashrc jepsen-control bash -c \
-            "lein run test --workload ${{ inputs.workload }} --nemesis ${{ inputs.nemesis }} ${{ inputs.cli-opts }}"
- 
       - name: Jepsen Test Artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.test-repo }}-${{ inputs.workload }}-${{ inputs.nemesis }}
+          name: 'ElectricSQL-intermediate-read'
           path: |
-            **/${{ inputs.test-repo }}/store
+            **/${{ github.workspace }}/store
             !**/current/
             !**/latest/
