@@ -2,8 +2,6 @@ name: Publish Jepsen Images
 
 on:
   workflow_dispatch:
-  schedule: # @daily
-    - cron: '0 0 * * *'
 
 env:
   REGISTRY: ghcr.io
@@ -17,16 +15,17 @@ jobs:
       packages: write
 
     steps:
-      - name: Clone Jepsen
+      - name: Clone jepsen-docker
         run: |
-          git clone --depth 1 --branch main https://github.com/nurturenature/jepsen-docker.git
-          git clone --depth 1 --branch jepsen-docker https://github.com/nurturenature/jepsen.git
+          gh repo clone nurturenature/jepsen-docker
           
-      - name: Build Jepsen Cluster
+      - name: Build Jepsen Images
         run: |
-          cd jepsen/docker
-          ./bin/up --build-only --compose ../../jepsen-docker/docker-compose.github-config.yml
-          cd ../..
+          cd jepsen-docker
+          docker build -t jepsen-setup   ./jepsen-setup
+          docker build -t jepsen-node    ./jepsen-node
+          docker build -t jepsen-control ./jepsen-control
+          cd ..
 
       - name: Docker Images
         run: |
@@ -42,12 +41,14 @@ jobs:
 
       - name: Tag Images
         run: |
-          docker tag jepsen_node    ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_node
-          docker tag jepsen_control ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_control
+          docker tag jepsen-setup   ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup
+          docker tag jepsen-node    ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node
+          docker tag jepsen-control ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control
           echo Tagged docker images:
           docker images
 
       - name: Push Images
         run: |
-          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_node
-          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen_control
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control

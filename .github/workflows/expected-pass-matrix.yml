@@ -2,8 +2,6 @@ name: Expected to Pass Matrix
 
 on:
   workflow_dispatch:
-  schedule: # At the start of every 4th hour
-    - cron: '0 */4 * * *'
 
 jobs:
   test:

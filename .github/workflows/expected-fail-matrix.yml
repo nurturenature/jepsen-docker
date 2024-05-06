@@ -2,8 +2,6 @@ name: Expected to Fail Matrix
 
 on:
   workflow_dispatch:
-  schedule: # At :30 in every 4th hour
-    - cron: '30 */4 * * *'
 
 jobs:
   test:
