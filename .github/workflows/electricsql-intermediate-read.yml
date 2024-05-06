@@ -20,6 +20,7 @@ jobs:
           ./electricsql-intermediate-read.sh
 
       - name: Jepsen, ElectricSQL, and PostgreSQL Logs
+        if: ${{ always() }}
         run: |
           docker cp jepsen-control:/jepsen/jepsen-causal-consistency/store $GITHUB_WORKSPACE
           docker logs jepsen-electric-1 > $GITHUB_WORKSPACE/store/current/electricsql.log 
