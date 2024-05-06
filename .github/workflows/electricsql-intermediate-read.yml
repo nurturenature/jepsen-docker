@@ -22,8 +22,8 @@ jobs:
       - name: Jepsen, ElectricSQL, and PostgreSQL Logs
         run: |
           docker cp jepsen-control:/jepsen/jepsen-causal-consistency/store $GITHUB_WORKSPACE 
-          docker logs --details electric > $GITHUB_WORKSPACE/store/latest/electricsql.log 
-          docker logs --details postgres > $GITHUB_WORKSPACE/store/latest/postgresql.log 
+          docker logs --details jepsen-electric-1 > $GITHUB_WORKSPACE/store/latest/electricsql.log 
+          docker logs --details jepsen-postgres-1 > $GITHUB_WORKSPACE/store/latest/postgresql.log 
           
       - name: Jepsen Test Artifacts
         if: ${{ always() }}
