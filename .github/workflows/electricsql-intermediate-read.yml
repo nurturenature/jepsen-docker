@@ -17,7 +17,7 @@ jobs:
           ./electricsql-build.sh
           ./electricsql-up.sh
           ./electricsql-run-migrations.sh
-          ./electricsql-intermediate-reads.sh
+          ./electricsql-intermediate-read.sh
 
       - name: ElectricSQL and PostgreSQL Logs
         run: |
