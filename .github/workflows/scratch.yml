@@ -16,9 +16,22 @@ jobs:
       packages: write
 
     steps:
-      - name: Delete Old Images
+      - name: Delete Old jepsen-setup Images
         uses: actions/delete-package-versions@v5
         with: 
           package-name: 'jepsen-docker/jepsen-setup'
           package-type: 'container'
           delete-only-untagged-versions: 'true'
+      - name: Delete Old jepsen-node Images
+        uses: actions/delete-package-versions@v5
+        with: 
+          package-name: 'jepsen-docker/jepsen-node'
+          package-type: 'container'
+          delete-only-untagged-versions: 'true'
+      - name: Delete Old jepsen-control Images
+        uses: actions/delete-package-versions@v5
+        with: 
+          package-name: 'jepsen-docker/jepsen-control'
+          package-type: 'container'
+          delete-only-untagged-versions: 'true'
+
