@@ -12,8 +12,5 @@ docker compose \
        --wait
 
 echo
-echo "A full Jepsen + ElectricSQL cluster is up and available:"
-echo
-docker ps
-echo
-echo "A test can be run with ./electricsql-run-test.sh"
+echo "A full Jepsen + ElectricSQL cluster is up and available"
+echo "Create test database tables and electrify them with ./electricsql-run-migrations.sh"

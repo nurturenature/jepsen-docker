@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+# set -e test may fail, still want echo
 
 docker exec \
        -t \
@@ -9,5 +9,4 @@ docker exec \
 
 echo
 echo "The test is complete."
-echo "If there is a test webserver running, ./electricsql-web.sh,"
-echo "Browse the results at http://localhost:8080"
+echo "Run the test webserver, ./electricsql-web.sh"

@@ -49,14 +49,14 @@ docker compose -f jepsen-compose.yaml down --volumes
 # create and electrify test tables
 ./electricsql-run-migrations.sh
 
-# run a webserver for test results on jepsen-control
-# available at http://localhost:8080
-./electricsql-web.sh
-
 # run a test
 # lots of output ending with the results map
 # easier to view results on test webserver
 ./electricsql-run-test.sh
+
+# run a webserver for test results on jepsen-control
+# available at http://localhost:8080
+./electricsql-web.sh
 
 # bring down and cleanup
 #   - removes postgresql volume
