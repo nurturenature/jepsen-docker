@@ -22,19 +22,22 @@ jobs:
       - name: Jepsen, ElectricSQL, and PostgreSQL Logs
         run: |
           docker cp jepsen-control:/jepsen/jepsen-causal-consistency/store $GITHUB_WORKSPACE
-          cd $GITHUB_WORKSPACE
-          pwd
-          ls -al
-          ls -al store
           docker logs jepsen-electric-1 > $GITHUB_WORKSPACE/store/current/electricsql.log 
           docker logs jepsen-postgres-1 > $GITHUB_WORKSPACE/store/current/postgresql.log 
           
-      - name: Jepsen Test Artifacts
+      - name: 'Jepsen Test Artifacts: results'
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: 'ElectricSQL-intermediate-read'
+          name: 'ElectricSQL-intermediate-read-results'
           path: |
-            ${{ github.workspace }}/store
-            !${{ github.workspace }}/store/current
-            !${{ github.workspace }}/store/latest
+            ${{ github.workspace }}/store/current/results.edn
+            
+      - name: 'Jepsen Test Artifacts: full'
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'ElectricSQL-intermediate-read-full'
+          path: |
+            ${{ github.workspace }}/store/current
+            
