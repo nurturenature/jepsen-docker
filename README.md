@@ -2,12 +2,15 @@
 
 ----
 
-This repository proposes a simplification of the current Jepsen in Docker:
-  - more image based
-  - more composable
+This repository proposes a simplification of the [current](https://github.com/jepsen-io/jepsen/jepsen/docker) Jepsen in Docker:
+- more image based
+- more composable
 
 Note that:
-  - images are large, fully featured systemd Debian containers
+- images are large
+- fully featured systemd Debian containers
+
+### Full Jepsen Environment
 
 ```bash
 # build Docker images
@@ -31,7 +34,7 @@ docker compose -f jepsen-compose.yaml down --volumes
 
 ----
 
-ElectricSQL Example
+### ElectricSQL Example
 
 ```bash
 # add ElectricSQL to Jepsen base images
