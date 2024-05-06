@@ -1,7 +1,9 @@
 #
 # Custom ElectricSQL control
 #
-FROM jepsen-control AS electricsql-control
+ARG JEPSEN_REGISTRY
+
+FROM ${JEPSEN_REGISTRY:-}jepsen-control AS electricsql-control
 
 # jepsen-causal-consistency
 RUN git clone --depth 1 --branch main \

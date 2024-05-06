@@ -1,7 +1,9 @@
 #
 # Custom ElectricSQL node
 #
-FROM jepsen-node AS electricsql-setup
+ARG JEPSEN_REGISTRY
+
+FROM ${JEPSEN_REGISTRY:-}jepsen-node AS electricsql-setup
 
 # deps
 RUN apt-get -qy update && \

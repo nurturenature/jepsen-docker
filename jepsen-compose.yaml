@@ -1,7 +1,6 @@
 name: jepsen
 
-x-defaults:
-  &defaults
+x-defaults: &defaults
   privileged: true
   cap_add:
     - ALL
@@ -17,17 +16,16 @@ x-defaults:
   networks:
     - jepsen
   healthcheck:
-    test: [ 'CMD-SHELL', 'systemctl', 'is-system-running' ]
+    test: ["CMD-SHELL", "systemctl", "is-system-running"]
     interval: 1s
     timeout: 1s
     retries: 3
     start_period: 3s
 
-x-node:
-  &default-node
-  << : *defaults
-  image: jepsen-node
-  depends_on: 
+x-node: &default-node
+  <<: *defaults
+  image: ${JEPSEN_REGISTRY:-}jepsen-node
+  depends_on:
     setup:
       condition: service_completed_successfully
 
@@ -39,15 +37,15 @@ networks:
 
 services:
   setup:
-    << : *defaults
-    image: jepsen-setup
+    <<: *defaults
+    image: ${JEPSEN_REGISTRY:-}jepsen-setup
     container_name: jepsen-setup
     hostname: setup
-    entrypoint: [ '/usr/local/bin/jepsen-setup.sh' ] 
+    entrypoint: ["/usr/local/bin/jepsen-setup.sh"]
 
   control:
-    << : *defaults
-    image: jepsen-control
+    <<: *defaults
+    image: ${JEPSEN_REGISTRY:-}jepsen-control
     container_name: jepsen-control
     hostname: control
     ports:
@@ -63,24 +61,24 @@ services:
         condition: service_healthy
       n5:
         condition: service_healthy
-    
+
   n1:
-    << : *default-node
+    <<: *default-node
     container_name: jepsen-n1
     hostname: n1
   n2:
-    << : *default-node
+    <<: *default-node
     container_name: jepsen-n2
     hostname: n2
   n3:
-    << : *default-node
+    <<: *default-node
     container_name: jepsen-n3
     hostname: n3
   n4:
-    << : *default-node
+    <<: *default-node
     container_name: jepsen-n4
     hostname: n4
   n5:
-    << : *default-node
+    <<: *default-node
     container_name: jepsen-n5
     hostname: n5

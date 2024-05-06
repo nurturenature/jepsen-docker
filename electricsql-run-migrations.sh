@@ -11,4 +11,4 @@ docker exec -t \
 
 echo
 echo "The database now has electrified tables ready to test."
-echo "A test can be run with ./electricsql-run-test.sh"
+echo "A test can be run with ./electricsql-intermediate-read.sh"

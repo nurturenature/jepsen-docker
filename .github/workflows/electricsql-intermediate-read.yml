@@ -1,52 +1,7 @@
-name: Compose Jepsen and Run a Test
+name: 'ElectricSQL: Intermediate Read'
 
 on:
   workflow_dispatch:
-    inputs:
-      test-org:
-        description: Organization
-        required: true
-      test-repo:
-        description: Repository
-        required: true
-      test-ref:
-        description: Reference
-        required: true
-      workload:
-        description: Workload
-        required: true
-      nemesis:
-        description: Nemesis
-        required: true
-      cli-opts:
-        description: --cli-opts
-        required: false
-  workflow_call:
-    inputs:
-      test-org:
-        type: string
-        description: Organization
-        required: true
-      test-repo:
-        type: string
-        description: Repository
-        required: true
-      test-ref:
-        type: string
-        description: Reference
-        required: true
-      workload:
-        type: string
-        description: Workload
-        required: true
-      nemesis:
-        type: string
-        description: Nemesis
-        required: true
-      cli-opts:
-        type: string
-        description: "--cli-opts"
-        required: false
 
 jobs:
   compose-jepsen-run-test:

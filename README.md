@@ -9,6 +9,12 @@ This repository proposes a simplification of the [current](https://github.com/je
 Note that:
 - images are large
 - fully featured systemd Debian containers
+- sample images are published at
+  ```bash
+  export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
+  ```
+
+----
 
 ### Full Jepsen Environment
 
@@ -17,6 +23,9 @@ Note that:
 docker build -t jepsen-setup   ./jepsen-setup
 docker build -t jepsen-node    ./jepsen-node
 docker build -t jepsen-control ./jepsen-control
+
+# or, use published Jepsen images from the registry
+export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
 
 # bring up a Jepsen control node and 5 db nodes
 docker compose -f jepsen-compose.yaml up --detach --wait
@@ -37,7 +46,7 @@ docker compose -f jepsen-compose.yaml down --volumes
 ### ElectricSQL Example
 
 ```bash
-# add ElectricSQL to Jepsen base images
+# add ElectricSQL to published Jepsen images 
 ./electricsql-build.sh
 
 # bring up by combining compose files
@@ -52,7 +61,7 @@ docker compose -f jepsen-compose.yaml down --volumes
 # run a test
 # lots of output ending with the results map
 # easier to view results on test webserver
-./electricsql-run-test.sh
+./electricsql-intermediate-read.sh
 
 # run a webserver for test results on jepsen-control
 # available at http://localhost:8080

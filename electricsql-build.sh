@@ -1,14 +1,16 @@
 #!/bin/bash
 set -e
 
-# build Jepsen images
-docker build -t jepsen-setup   ./jepsen-setup
-docker build -t jepsen-node    ./jepsen-node
-docker build -t jepsen-control ./jepsen-control
-
 # FROM Jepsen images to ElectricSQL images
-docker build -t electricsql-node    ./electricsql-node
-docker build -t electricsql-control ./electricsql-control
+docker build \
+       -t electricsql-node \
+       --build-arg JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/" \
+       ./electricsql-node
+
+docker build \
+       -t electricsql-control \
+       --build-arg JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/" \
+       ./electricsql-control
 
 echo
 echo "Jepsen + ElectricSQL Docker images have been built."
