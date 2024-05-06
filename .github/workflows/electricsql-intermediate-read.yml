@@ -43,7 +43,7 @@ jobs:
  
       - name: Jepsen Test Artifacts
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.test-repo }}-${{ inputs.workload }}-${{ inputs.nemesis }}
           path: |
