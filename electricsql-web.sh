@@ -6,5 +6,6 @@ docker exec -d -t \
        jepsen-control \
        lein run serve
  
- echo "Test web server http://localhost:8080"
+ echo
+ echo "Test web server is available at http://localhost:8080"
  

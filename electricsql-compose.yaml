@@ -2,7 +2,7 @@ name: electric
 
 configs:
   postgres_config:
-    file: "./postgres.conf"
+    file: "./electricsql-postgres.conf"
 
 volumes:
   pg_data:
