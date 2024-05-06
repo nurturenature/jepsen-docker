@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
 
 env:
+  GH_TOKEN: ${{ github.token }}
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-
+  
 jobs:
   publish-jepsen-images:
     runs-on: ubuntu-latest
@@ -18,7 +19,7 @@ jobs:
       - name: Clone jepsen-docker
         run: |
           gh repo clone nurturenature/jepsen-docker
-          
+
       - name: Build Jepsen Images
         run: |
           cd jepsen-docker
