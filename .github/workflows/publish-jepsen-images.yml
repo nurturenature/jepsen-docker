@@ -16,17 +16,15 @@ jobs:
       packages: write
 
     steps:
-      - name: Clone jepsen-docker
-        run: |
-          gh repo clone nurturenature/jepsen-docker
-
+      - name: checkout jepsen-docker
+        uses: actions/checkout@v4
+        
       - name: Build Jepsen Images
         run: |
-          cd jepsen-docker
+          cd $GITHUB_WORKSPACE
           docker build -t jepsen-setup   ./jepsen-setup
           docker build -t jepsen-node    ./jepsen-node
           docker build -t jepsen-control ./jepsen-control
-          cd ..
 
       - name: Docker Images
         run: |
@@ -53,3 +51,10 @@ jobs:
           docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup
           docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node
           docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control
+
+      - name: Delete Old Images
+        uses: actions/delete-package-versions@v5
+        with: 
+          package-name: 'jepsen-docker'
+          package-type: 'container'
+          delete-only-untagged-versions: 'true'
