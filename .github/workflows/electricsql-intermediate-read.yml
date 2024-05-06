@@ -23,10 +23,11 @@ jobs:
         run: |
           docker cp jepsen-control:/jepsen/jepsen-causal-consistency/store $GITHUB_WORKSPACE
           cd $GITHUB_WORKSPACE
+          pwd
           ls -al
           ls -al store
-          docker logs jepsen-electric-1 > $GITHUB_WORKSPACE/store/latest/electricsql.log 
-          docker logs jepsen-postgres-1 > $GITHUB_WORKSPACE/store/latest/postgresql.log 
+          docker logs jepsen-electric-1 > $GITHUB_WORKSPACE/store/current/electricsql.log 
+          docker logs jepsen-postgres-1 > $GITHUB_WORKSPACE/store/current/postgresql.log 
           
       - name: Jepsen Test Artifacts
         if: ${{ always() }}
@@ -34,6 +35,6 @@ jobs:
         with:
           name: 'ElectricSQL-intermediate-read'
           path: |
-            **/${{ github.workspace }}/store
-            !**/current/
-            !**/latest/
+            ${{ github.workspace }}/store
+            !${{ github.workspace }}/store/current
+            !${{ github.workspace }}/store/latest
