@@ -10,6 +10,10 @@ RUN run-parts --exit-on-error --verbose /usr/local/debian-base-setup
 ENV container=docker
 STOPSIGNAL SIGRTMIN+3
 
+# keep Debian up to date
+RUN apt-get -qy update && \
+    apt-get -qy upgrade
+
 ENV LEIN_ROOT true
 
 # JDK21 only in Debian testing
