@@ -49,6 +49,13 @@ ENV ROOT_PASS=root
 ADD ./root.password /jepsen/root.password
 RUN passwd root < /jepsen/root.password
 
+# pre-cache bitflip binary
+RUN wget \
+    --no-verbose \
+    --force-directories \
+    -O "/tmp/jepsen/wget-cache/aHR0cHM6Ly9naXRodWIuY29tL2F5YmFidG1lL2JpdGZsaXAvcmVsZWFzZXMvZG93bmxvYWQvdjAuMi4wL2JpdGZsaXBfMC4yLjBfTGludXhfeDg2XzY0LnRhci5neg\=\=" \
+    https://github.com/aybabtme/bitflip/releases/download/v0.2.0/bitflip_0.2.0_Linux_x86_64.tar.gz
+
 EXPOSE 22
 
 ENTRYPOINT [ "/usr/local/bin/boot-debian-base" ]
