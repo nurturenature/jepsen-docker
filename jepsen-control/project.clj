@@ -1,17 +1,17 @@
 (defproject jepsen-docker "0.1.0-SNAPSHOT"
   :description "Jepsen setup for docker."
-  :dependencies [[jepsen "0.3.6-SNAPSHOT"]
-                 [org.clojure/clojure "1.11.1"]
+  :dependencies [[jepsen "0.3.8-SNAPSHOT"]
+                 [org.clojure/clojure "1.12.0"]
                  [org.clojure/data.fressian "1.0.0"]
                  [org.clojure/tools.logging "1.2.4"]
                  [org.clojure/tools.cli "1.0.219"]
                  [spootnik/unilog "0.7.31"
                   :exclusions [org.slf4j/slf4j-api]]
-                 [elle "0.2.1"]
+                 [elle "0.2.3-SNAPSHOT"]
                  [clj-time "0.15.2"]
-                 [io.jepsen/history "0.1.3"]
+                 [io.jepsen/history "0.1.5-SNAPSHOT"]
                  [jepsen.txn "0.1.2"]
-                 [knossos "0.3.10"]
+                 [knossos "0.3.12-SNAPSHOT"]
                  [clj-ssh "0.5.14"]
                  [gnuplot "0.1.3"]
                  [http-kit "2.7.0"]
