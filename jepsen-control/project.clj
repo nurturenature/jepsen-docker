@@ -1,6 +1,6 @@
 (defproject jepsen-docker "0.1.0-SNAPSHOT"
   :description "Jepsen setup for docker."
-  :dependencies [[jepsen "0.3.8-SNAPSHOT"]
+  :dependencies [[jepsen "0.3.7"]
                  [org.clojure/clojure "1.12.0"]
                  [org.clojure/data.fressian "1.0.0"]
                  [org.clojure/tools.logging "1.2.4"]
