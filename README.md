@@ -11,12 +11,13 @@ Note that:
 - fully featured systemd Debian containers
 
 Sample images:
-- use Jepsen `0.3.8`
+- install current release version `0.3.8`
+- build/install current development version from GitHub repository `0.3.9-SNAPSHOT`
+- are built and published every Sunday at 00:15
 - are published at:
   ```bash
   export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
   ```
-- are built and published every Sunday at 00:15
 
 ----
 

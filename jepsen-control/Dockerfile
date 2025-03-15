@@ -29,10 +29,18 @@ RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
     chmod +x /usr/bin/lein && \
     lein self-install
 
-# install Jepsen
+# install currently released Jepsen
 WORKDIR /jepsen
 ADD ./project.clj ./project.clj
 RUN lein deps
+WORKDIR /
+RUN rm -rf /jepsen
+
+# build/install latest Jepsen from GitHub repository
+WORKDIR /jepsen
+RUN git clone -b main --depth 1 --single-branch https://github.com/jepsen-io/jepsen.git
+WORKDIR /jepsen/jepsen/jepsen
+RUN lein install
 WORKDIR /
 RUN rm -rf /jepsen
 
