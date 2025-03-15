@@ -9,10 +9,14 @@ This repository proposes a simplification of the [current](https://github.com/je
 Note that:
 - images are large
 - fully featured systemd Debian containers
-- sample images are published at
+
+Sample images:
+- use Jepsen `0.3.8`
+- are published at:
   ```bash
   export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
   ```
+- are built and published every Sunday at 00:15
 
 ----
 

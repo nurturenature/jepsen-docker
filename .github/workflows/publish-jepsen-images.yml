@@ -1,6 +1,8 @@
 name: Publish Jepsen Images
 
 on:
+  schedule:
+    - cron: "15 0 * * 0"  # every Sunday at 00:15
   workflow_dispatch:
 
 env:
