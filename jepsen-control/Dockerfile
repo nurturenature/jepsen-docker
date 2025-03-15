@@ -30,8 +30,11 @@ RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
     lein self-install
 
 # install Jepsen
-ADD ./project.clj /jepsen/project.clj
-RUN cd /jepsen && lein deps
+WORKDIR /jepsen
+ADD ./project.clj ./project.clj
+RUN lein deps
+WORKDIR /
+RUN rm -rf /jepsen
 
 # setup script to be run at boot
 ADD ./jepsen-setup.sh /usr/local/bin/jepsen-setup.sh
