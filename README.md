@@ -11,8 +11,8 @@ Note that:
 - fully featured systemd Debian containers
 
 Sample images:
-- install current release version `0.3.8`
-- build/install current development version from GitHub repository `0.3.9-SNAPSHOT`
+- install current release version `0.3.9`
+- build/install current development version from GitHub repository `0.3.10-SNAPSHOT`
 - are built and published every Sunday at 00:15
 - are published at:
   ```bash
