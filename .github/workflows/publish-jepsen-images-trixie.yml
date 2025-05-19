@@ -1,0 +1,85 @@
+name: Publish Jepsen Images Trixie
+
+on:
+  schedule:
+    - cron: "30 0 * * 0"  # every Sunday at 00:30
+  workflow_dispatch:
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  
+jobs:
+  publish-jepsen-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: checkout jepsen-docker
+        uses: actions/checkout@v4
+        
+      - name: Build Jepsen Images
+        run: |
+          cd $GITHUB_WORKSPACE
+          docker build \
+            --build-arg debian_release=trixie \
+            --tag jepsen-setup \
+            ./jepsen-setup
+          docker build \
+            --build-arg debian_release=trixie \
+            --tag jepsen-node \
+            ./jepsen-node
+          docker build \
+            --build-arg debian_release=trixie \
+            --tag jepsen-control \
+            ./jepsen-control
+
+      - name: List Docker Images
+        run: |
+          echo Built docker images:
+          docker images
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag Images
+        run: |
+          docker tag jepsen-setup   ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup:trixie
+          docker tag jepsen-node    ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node:trixie
+          docker tag jepsen-control ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control:trixie
+          echo Tagged docker images:
+          docker images
+
+      - name: Push Images
+        run: |
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup:trixie
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node:trixie
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control:trixie
+
+      - name: Delete Old jepsen-setup Images
+        uses: actions/delete-package-versions@v5
+        with: 
+          package-name: 'jepsen-docker/jepsen-setup'
+          package-type: 'container'
+          delete-only-untagged-versions: 'true'
+
+      - name: Delete Old jepsen-node Images
+        uses: actions/delete-package-versions@v5
+        with: 
+          package-name: 'jepsen-docker/jepsen-node'
+          package-type: 'container'
+          delete-only-untagged-versions: 'true'
+          
+      - name: Delete Old jepsen-control Images
+        uses: actions/delete-package-versions@v5
+        with: 
+          package-name: 'jepsen-docker/jepsen-control'
+          package-type: 'container'
+          delete-only-untagged-versions: 'true'
