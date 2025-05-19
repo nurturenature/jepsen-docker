@@ -11,10 +11,9 @@ Note that:
 - fully featured systemd Debian containers
 
 Sample images:
-- tagged as `latest` for Debian 12, Bookworm, and `trixie` for Debian 13, Trixie 
-- install Jepsen current release version `0.3.9`
-- build/install Jepsen current development version from GitHub repository `0.3.10-SNAPSHOT`
-- are built and published every Sunday at 00:15 for `latest`, and 00:30 for `trixie`
+- install current release version `0.3.9`
+- build/install current development version from GitHub repository `0.3.10-SNAPSHOT`
+- are built and published every Sunday at 00:15
 - are published at:
   ```bash
   export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
@@ -25,7 +24,7 @@ Sample images:
 ### Full Jepsen Environment
 
 ```bash
-# build Docker images locally
+# build Docker images
 docker build -t jepsen-setup   ./jepsen-setup
 docker build -t jepsen-node    ./jepsen-node
 docker build -t jepsen-control ./jepsen-control
