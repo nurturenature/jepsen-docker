@@ -1,20 +1,28 @@
-## [Jepsen](https://github.com/jepsen-io/jepsen) in Docker
+# [Jepsen](https://github.com/jepsen-io/jepsen) in Docker
+
+## This is the `bookworm` branch of this repository
+
+## It will build and publish `debian:bookworm` based images
 
 ----
 
 This repository proposes a simplification of the [current](https://github.com/jepsen-io/jepsen/jepsen/docker) Jepsen in Docker:
+
 - more image based
 - more composable
 
 Note that:
+
 - images are large
 - fully featured systemd Debian containers
 
 Sample images:
+
 - install current release version `0.3.9`
 - build/install current development version from GitHub repository `0.3.10-SNAPSHOT`
 - are built and published every Sunday at 00:15
 - are published at:
+
   ```bash
   export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
   ```
@@ -25,9 +33,9 @@ Sample images:
 
 ```bash
 # build Docker images
-docker build -t jepsen-setup   ./jepsen-setup
-docker build -t jepsen-node    ./jepsen-node
-docker build -t jepsen-control ./jepsen-control
+docker build -t jepsen-setup:bookworm   ./jepsen-setup
+docker build -t jepsen-node:bookworm    ./jepsen-node
+docker build -t jepsen-control:bookworm ./jepsen-control
 
 # or, use published Jepsen images from the registry
 export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"

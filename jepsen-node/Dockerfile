@@ -35,7 +35,7 @@ RUN apt-get -qy update && \
 RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
 
 # Enable SSH server
-ENV DEBBASE_SSH enabled
+ENV DEBBASE_SSH=enabled
 
 # setup script to be run at boot
 ADD ./jepsen-setup.sh /usr/local/bin/jepsen-setup.sh

@@ -14,7 +14,7 @@ STOPSIGNAL SIGRTMIN+3
 RUN apt-get -qy update && \
     apt-get -qy upgrade
 
-ENV LEIN_ROOT true
+ENV LEIN_ROOT=true
 
 #
 # Jepsen dependencies

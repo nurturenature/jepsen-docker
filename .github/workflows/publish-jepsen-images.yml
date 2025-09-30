@@ -24,9 +24,9 @@ jobs:
       - name: Build Jepsen Images
         run: |
           cd $GITHUB_WORKSPACE
-          docker build -t jepsen-setup   ./jepsen-setup
-          docker build -t jepsen-node    ./jepsen-node
-          docker build -t jepsen-control ./jepsen-control
+          docker build -t jepsen-setup:bookworm   ./jepsen-setup
+          docker build -t jepsen-node:bookworm    ./jepsen-node
+          docker build -t jepsen-control:bookworm ./jepsen-control
 
       - name: List Docker Images
         run: |
@@ -42,35 +42,35 @@ jobs:
 
       - name: Tag Images
         run: |
-          docker tag jepsen-setup   ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup
-          docker tag jepsen-node    ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node
-          docker tag jepsen-control ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control
+          docker tag jepsen-setup:bookworm   ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup:bookworm
+          docker tag jepsen-node:bookworm    ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node:bookworm
+          docker tag jepsen-control:bookworm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control:bookworm
           echo Tagged docker images:
           docker images
 
       - name: Push Images
         run: |
-          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup
-          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node
-          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-setup:bookworm
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-node:bookworm
+          docker push -q ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/jepsen-control:bookworm
 
       - name: Delete Old jepsen-setup Images
         uses: actions/delete-package-versions@v5
         with: 
-          package-name: 'jepsen-docker/jepsen-setup'
+          package-name: 'jepsen-docker/jepsen-setup:bookworm'
           package-type: 'container'
           delete-only-untagged-versions: 'true'
 
       - name: Delete Old jepsen-node Images
         uses: actions/delete-package-versions@v5
         with: 
-          package-name: 'jepsen-docker/jepsen-node'
+          package-name: 'jepsen-docker/jepsen-node:bookworm'
           package-type: 'container'
           delete-only-untagged-versions: 'true'
           
       - name: Delete Old jepsen-control Images
         uses: actions/delete-package-versions@v5
         with: 
-          package-name: 'jepsen-docker/jepsen-control'
+          package-name: 'jepsen-docker/jepsen-control:bookworm'
           package-type: 'container'
           delete-only-untagged-versions: 'true'
