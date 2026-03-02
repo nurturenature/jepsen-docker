@@ -10,6 +10,8 @@ RUN run-parts --exit-on-error --verbose /usr/local/debian-base-setup
 ENV container=docker
 STOPSIGNAL SIGRTMIN+3
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # keep Debian up to date
 RUN apt-get -qy update && \
     apt-get -qy upgrade
@@ -33,14 +35,6 @@ RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 WORKDIR /jepsen
 ADD ./project.clj ./project.clj
 RUN lein deps
-WORKDIR /
-RUN rm -rf /jepsen
-
-# build/install latest Jepsen from GitHub repository
-WORKDIR /jepsen
-RUN git clone -b main --depth 1 --single-branch https://github.com/jepsen-io/jepsen.git
-WORKDIR /jepsen/jepsen/jepsen
-RUN lein install
 WORKDIR /
 RUN rm -rf /jepsen
 

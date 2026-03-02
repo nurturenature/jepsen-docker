@@ -2,7 +2,7 @@
 
 ## This is the `bookworm` branch of this repository
 
-## It will build and publish `debian:bookworm` based images
+## It will build and publish `Jepsen 0.3.10` `debian:bookworm` based images
 
 ----
 
@@ -18,8 +18,8 @@ Note that:
 
 Sample images:
 
-- install current release version `0.3.10`
-- build/install current development version from GitHub repository `0.3.11-SNAPSHOT`
+- based on `debian:bookworm`
+- install Jepsen release version `0.3.10`
 - are built and published every Sunday at 00:15
 - are published at:
 

@@ -12,6 +12,8 @@ RUN run-parts --exit-on-error --verbose /usr/local/debian-base-setup
 ENV container=docker
 STOPSIGNAL SIGRTMIN+3
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # keep Debian up to date
 RUN apt-get -qy update && \
     apt-get -qy upgrade
