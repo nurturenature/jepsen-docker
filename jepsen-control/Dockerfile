@@ -1,5 +1,5 @@
 FROM jgoerzen/debian-base-minimal AS debian-addons
-FROM debian:slim AS jepsen-control
+FROM debian:trixie-slim AS jepsen-control
 
 COPY --from=debian-addons /usr/local/preinit/ /usr/local/preinit/
 COPY --from=debian-addons /usr/local/bin/ /usr/local/bin/
