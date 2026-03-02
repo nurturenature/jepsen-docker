@@ -1,5 +1,5 @@
-FROM jgoerzen/debian-base-minimal:bookworm AS debian-addons
-FROM debian:bookworm-slim AS jepsen-control
+FROM jgoerzen/debian-base-minimal AS debian-addons
+FROM debian:slim AS jepsen-control
 
 COPY --from=debian-addons /usr/local/preinit/ /usr/local/preinit/
 COPY --from=debian-addons /usr/local/bin/ /usr/local/bin/
@@ -9,6 +9,8 @@ RUN run-parts --exit-on-error --verbose /usr/local/debian-base-setup
 
 ENV container=docker
 STOPSIGNAL SIGRTMIN+3
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # keep Debian up to date
 RUN apt-get -qy update && \
@@ -21,20 +23,12 @@ ENV LEIN_ROOT true
 #
 RUN apt-get -qy update && \
     apt-get -qy install \
-    curl dos2unix emacs git gnuplot graphviz htop iputils-ping libjna-java pssh screen vim wget && \
-    curl -L https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jdk_x64_linux_hotspot_21.0.8_9.tar.gz | tar -xz --strip-components=1 -C /usr/local/
+    curl dos2unix emacs git gnuplot graphviz htop iputils-ping libjna-java openjdk-25-jdk pssh screen vim wget
 
 RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
     mv lein /usr/bin && \
     chmod +x /usr/bin/lein && \
     lein self-install
-
-# install currently released Jepsen
-WORKDIR /jepsen
-ADD ./project.clj ./project.clj
-RUN lein deps
-WORKDIR /
-RUN rm -rf /jepsen
 
 # build/install latest Jepsen from GitHub repository
 WORKDIR /jepsen

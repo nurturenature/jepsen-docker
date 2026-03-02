@@ -1,7 +1,7 @@
 # See https://salsa.debian.org/jgoerzen/docker-debian-base
 # See https://hub.docker.com/r/jgoerzen/debian-base-standard
-FROM jgoerzen/debian-base-minimal:bookworm AS debian-addons
-FROM debian:bookworm-slim AS jepsen-node
+FROM jgoerzen/debian-base-minimal AS debian-addons
+FROM debian:slim AS jepsen-node
 
 COPY --from=debian-addons /usr/local/preinit/ /usr/local/preinit/
 COPY --from=debian-addons /usr/local/bin/ /usr/local/bin/
@@ -11,6 +11,8 @@ RUN run-parts --exit-on-error --verbose /usr/local/debian-base-setup
 
 ENV container=docker
 STOPSIGNAL SIGRTMIN+3
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # keep Debian up to date
 RUN apt-get -qy update && \
@@ -29,7 +31,7 @@ RUN apt-get -qy update && \
 # Install Jepsen deps
 RUN apt-get -qy update && \
     apt-get -qy install \
-    build-essential bzip2 ca-certificates curl dirmngr dnsutils faketime iproute2 iptables iputils-ping libzip4 logrotate lsb-release man man-db netcat-openbsd net-tools ntpdate psmisc python3 rsyslog sudo tar tcpdump unzip vim wget
+    build-essential bzip2 ca-certificates curl dirmngr dnsutils faketime iproute2 iptables iputils-ping logrotate lsb-release man man-db netcat-openbsd net-tools ntpsec-ntpdate psmisc python3 rsyslog sudo tar tcpdump unzip vim wget
 
 # Configure SSHD
 RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config

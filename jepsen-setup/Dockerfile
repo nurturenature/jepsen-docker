@@ -1,7 +1,7 @@
 # See https://salsa.debian.org/jgoerzen/docker-debian-base
 # See https://hub.docker.com/r/jgoerzen/debian-base-standard
-FROM jgoerzen/debian-base-minimal:bookworm AS debian-addons
-FROM debian:bookworm-slim AS jepsen-setup
+FROM jgoerzen/debian-base-minimal AS debian-addons
+FROM debian:slim AS jepsen-setup
 
 COPY --from=debian-addons /usr/local/preinit/ /usr/local/preinit/
 COPY --from=debian-addons /usr/local/bin/ /usr/local/bin/
@@ -11,6 +11,8 @@ RUN run-parts --exit-on-error --verbose /usr/local/debian-base-setup
 
 ENV container=docker
 STOPSIGNAL SIGRTMIN+3
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # keep Debian up to date
 RUN apt-get -qy update && \

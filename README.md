@@ -1,27 +1,32 @@
-## [Jepsen](https://github.com/jepsen-io/jepsen) in Docker
+# [Jepsen](https://github.com/jepsen-io/jepsen) in Docker
 
 ----
 
 This repository proposes a simplification of the [current](https://github.com/jepsen-io/jepsen/jepsen/docker) Jepsen in Docker:
+
 - more image based
 - more composable
 
 Note that:
+
 - images are large
 - fully featured systemd Debian containers
 
 Sample images:
-- install current release version `0.3.9`
-- build/install current development version from GitHub repository `0.3.10-SNAPSHOT`
-- are built and published every Sunday at 00:15
+
+- based on Debian 13/Trixie
+- build/install current development version of Jepsen, `0.3.11-SNAPSHOT`, from Jepsen's GitHub repository
+  - `0.3.11-SNAPSHOT` is currently the only version of Jepsen supporting Debian 13/Trixie
+- are built and published to the GitHub Container Registry every Sunday at 00:15
 - are published at:
+
   ```bash
   export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
   ```
 
 ----
 
-### Full Jepsen Environment
+## Full Jepsen Environment
 
 ```bash
 # build Docker images
