@@ -15,8 +15,8 @@ Note that:
 Sample images:
 
 - based on Debian 13/Trixie
-- build/install current development version of Jepsen, `0.3.11-SNAPSHOT`, from Jepsen's GitHub repository
-  - `0.3.11-SNAPSHOT` is currently the only version of Jepsen supporting Debian 13/Trixie
+- install Jepsen `0.3.11`
+- build/install current development version of Jepsen from Jepsen's GitHub repository
 - are built and published to the GitHub Container Registry every Sunday at 00:15
 - are published at:
 
