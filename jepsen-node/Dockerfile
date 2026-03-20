@@ -21,7 +21,7 @@ RUN apt-get -qy update && \
 # Basic system stuff
 RUN apt-get -qy update && \
     apt-get -qy install \
-    apt-transport-https
+    apt-transport-https apt-utils
 
 # Install packages
 RUN apt-get -qy update && \
