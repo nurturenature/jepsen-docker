@@ -15,13 +15,13 @@ It's design:
 - primary use case is CI/CD/test/similar environments
   - when developing Jepsen tests, LXC/LXD or real VMs provide a superior experience
 
-Published images are:
+Images can be built locally, or images are published:
 
 - based on Debian 13/Trixie
 - install Jepsen `0.3.11`
 - build/install current development version, `0.3.12-SNAPSHOT`, of Jepsen from Jepsen's GitHub repository
-- are built and published to the GitHub Container Registry every Sunday at 00:15
-- are published at:
+- built and published to the GitHub Container Registry every Sunday at 00:15
+- published at:
 
   ```bash
   export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
@@ -160,6 +160,10 @@ services:
 ----
 
 ## Issues
+
+### Containers Don't Have Real Clocks
+
+Like other containers, Docker containers don't have real clocks--that means you generally can't use them to test clock skew.
 
 ### Privileged?
 
