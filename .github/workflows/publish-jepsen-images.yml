@@ -2,14 +2,14 @@ name: Publish Jepsen Images
 
 on:
   schedule:
-    - cron: "15 0 * * 0"  # every Sunday at 00:15
+    - cron: "15 0 * * 0" # every Sunday at 00:15
   workflow_dispatch:
 
 env:
   GH_TOKEN: ${{ github.token }}
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  
+
 jobs:
   publish-jepsen-images:
     runs-on: ubuntu-latest
@@ -20,14 +20,11 @@ jobs:
     steps:
       - name: checkout jepsen-docker
         uses: actions/checkout@v6
-        
+
       - name: Build Jepsen Images
         run: |
-          cd $GITHUB_WORKSPACE
-          docker build -t jepsen-setup   ./jepsen-setup
-          docker build -t jepsen-node    ./jepsen-node
-          docker build -t jepsen-control ./jepsen-control
-
+          cd $GITHUB_WORKSPACE/bin
+          ./docker-build.sh
       - name: List Docker Images
         run: |
           echo Built docker images:
@@ -56,21 +53,21 @@ jobs:
 
       - name: Delete Old jepsen-setup Images
         uses: actions/delete-package-versions@v5
-        with: 
-          package-name: 'jepsen-docker/jepsen-setup'
-          package-type: 'container'
-          delete-only-untagged-versions: 'true'
+        with:
+          package-name: "jepsen-docker/jepsen-setup"
+          package-type: "container"
+          delete-only-untagged-versions: "true"
 
       - name: Delete Old jepsen-node Images
         uses: actions/delete-package-versions@v5
-        with: 
-          package-name: 'jepsen-docker/jepsen-node'
-          package-type: 'container'
-          delete-only-untagged-versions: 'true'
-          
+        with:
+          package-name: "jepsen-docker/jepsen-node"
+          package-type: "container"
+          delete-only-untagged-versions: "true"
+
       - name: Delete Old jepsen-control Images
         uses: actions/delete-package-versions@v5
-        with: 
-          package-name: 'jepsen-docker/jepsen-control'
-          package-type: 'container'
-          delete-only-untagged-versions: 'true'
+        with:
+          package-name: "jepsen-docker/jepsen-control"
+          package-type: "container"
+          delete-only-untagged-versions: "true"

@@ -1,18 +1,21 @@
-# [Jepsen](https://github.com/jepsen-io/jepsen) in Docker
+# Jepsen in Docker
 
 ----
 
-This repository proposes a simplification of the [current](https://github.com/jepsen-io/jepsen/jepsen/docker) Jepsen in Docker:
+This repository is a community supported way to run [Jepsen](https://github.com/jepsen-io/jepsen) in Docker.
 
-- more image based
-- more composable
+It's design:
 
-Note that:
+- focuses on creating fully featured images
+- accepts that such images are large
+  - Debian using `systemd`
+  - `jepsen-control` contains all packages needed by Jepsen's Control node
+  - `jepsen-node` contains the usual packages needed by a Jepsen Database node and its Nemeses
+- tries to be composable with other's docker-compose.yaml, e.g. the database being tested
+- primary use case is CI/CD/test/similar environments
+  - when developing Jepsen tests, LXC/LXD or real VMs provide a superior experience
 
-- images are large
-- fully featured systemd Debian containers
-
-Sample images:
+Published images are:
 
 - based on Debian 13/Trixie
 - install Jepsen `0.3.11`
@@ -26,27 +29,168 @@ Sample images:
 
 ----
 
-## Full Jepsen Environment
+## Using Jepsen Images From the GitHub Container Registry
 
 ```bash
-# build Docker images
-docker build -t jepsen-setup   ./jepsen-setup
-docker build -t jepsen-node    ./jepsen-node
-docker build -t jepsen-control ./jepsen-control
-
-# or, use published Jepsen images from the registry
+# use published Jepsen images from the registry
 export JEPSEN_REGISTRY="ghcr.io/nurturenature/jepsen-docker/"
 
-# bring up a Jepsen control node and 5 db nodes
-docker compose -f jepsen-compose.yaml up --detach --wait
+# docker shell scripts
+cd bin
 
-# open a shell into the control node
-docker exec -it jepsen-control bash
+# pull from registry
+./docker-pull.sh
 
-# remember you can run a test webserver in the control node
-# that will be available from the host at http://localhost:8080
-lein run serve
+# bring up a Jepsen Control node and 5 Database nodes
+./docker-compose.up
+
+# open a shell into the Control node
+./jepsen-console.sh
 
 # bring down the Jepsen cluster
-docker compose -f jepsen-compose.yaml down --volumes
+./docker-compose-down.sh
 ```
+
+----
+
+## Building Jepsen Images Locally
+
+```bash
+# not using published Jepsen images from the registry
+unset JEPSEN_REGISTRY
+
+# docker shell scripts
+cd bin
+
+# build images locally
+./docker-build.sh
+
+# bring up a Jepsen Control node and 5 Database nodes
+./docker-compose.up
+
+# open a shell into the Control node
+./jepsen-console.sh
+
+# bring down the Jepsen cluster
+./docker-compose-down.sh
+```
+
+----
+
+## Building Custom Images
+
+### Control Node
+
+```Dockerfile
+# Jepsen Control + MyDB node
+
+ARG JEPSEN_REGISTRY
+
+FROM ${JEPSEN_REGISTRY:-}jepsen-control
+
+WORKDIR /jepsen
+RUN git clone -b main --depth 1 --single-branch https://github.com/me/MyDB.git
+
+# deps
+WORKDIR /jepsen/MyDB
+RUN lein deps
+```
+
+### Database Node
+
+```Dockerfile
+# Jepsen Database + MyClient node
+
+ARG JEPSEN_REGISTRY
+
+FROM ${JEPSEN_REGISTRY:-}jepsen-node
+
+WORKDIR /jepsen
+RUN git clone -b main --depth 1 --single-branch https://github.com/me/MyClient.git
+
+# deps
+WORKDIR /jepsen/MyClient
+RUN npm install
+```
+
+----
+
+## Running Jepsen Tests
+
+Running a test on the Control node:
+
+```bash
+# replace $myTestDir with the directory of your Jepsen test on the Control node
+docker exec \
+       -t \
+       -w $myTestDir \
+       jepsen-control \
+       bash -c "source /root/.bashrc && cd $myTestDir && lein run test --workload ..."
+```
+
+### Running Jepsen's Test Result Webserver
+
+```bash
+# replace $myTestDir with the directory of your Jepsen test on the Control node
+docker exec \
+       -t \
+       -w $myTestDir \
+       jepsen-control \
+       bash -c "source /root/.bashrc && cd $myTestDir && lein run serve"
+
+# launch web browser with the URI for the webserver running on Control node
+cd bin
+./web-browser.sh
+```
+
+----
+
+## Composing With Others
+
+Make Jepsen's `setup` depend on what is being tested being up and `service_healthy`:
+
+```yaml
+services:
+  setup:
+    depends_on:
+      what_is_being_tested:
+        condition: service_healthy
+```
+
+----
+
+## Issues
+
+### Privileged?
+
+Jepsen introduces real environmental faults in real systems and needs the privileges to do so. Historically, it has been challenging to configure Docker to support Jepsen, and challenging for Docker to handle such configurations.
+
+So, it's more realistic to just run:
+
+```yaml
+privileged: true
+```
+
+### Process Management
+
+Jepsen regularly kills, pauses, resumes, and messes with process in general.
+Docker will sometimes fail such requests. e.g. `kill -9 db-process`, with an exit code of 137 so will need to be retried.
+
+### Desktop or Command Line?
+
+Personal anecdata shows that using:
+
+- the Docker CLI package is much more robust than the DockerDesktop package
+- use images from `download.docker.com`
+
+  ```bash
+  sudo apt-get install extrepo
+  sudo extrepo enable docker
+  sudo apt-get update
+  sudo apt-get install containerd.io \
+                       docker-buildx-plugin \
+                       docker-ce \
+                       docker-ce-cli \
+                       docker-ce-rootless-extras \
+                       docker-compose-plugin
+  ```
