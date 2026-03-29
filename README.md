@@ -1,4 +1,4 @@
-# Jepsen in Docker
+# Jepsen in Docker, Community Edition
 
 ----
 
