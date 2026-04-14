@@ -34,12 +34,12 @@ RUN apt-get -qy update && \
     build-essential bzip2 ca-certificates curl dirmngr dnsutils faketime iproute2 iptables iputils-ping logrotate lsb-release man man-db netcat-openbsd net-tools ntpsec-ntpdate psmisc python3 rsyslog sudo tar tcpdump unzip vim wget
 
 # prep for jepsen.lazyfs
-ARG repo-url=https://github.com/dsrhaslab/lazyfs.git
-ARG repo-dir=/opt/jepsen/lazyfs
+ARG REPO_URL=https://github.com/dsrhaslab/lazyfs.git
+ARG REPO_DIR=/opt/jepsen/lazyfs
 RUN apt-get -qy update && \
     apt-get -qy install \
     cmake libfuse3-dev libfuse3-4 fuse3 g++ git
-RUN git clone ${repo-url} ${repo-dir}
+RUN git clone $REPO_URL $REPO_DIR
 
 # Configure SSHD
 RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config

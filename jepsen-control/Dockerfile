@@ -38,8 +38,11 @@ WORKDIR /
 RUN rm -rf /jepsen
 
 # build/install latest Jepsen from GitHub repository
+# TODO: currently a fork to support additional lazyfs commands
+ARG REPO_URL=https://github.com/nurturenature/jepsen.git
+ARG REPO_BRANCH=lazyfs-commands
 WORKDIR /jepsen
-RUN git clone -b main --depth 1 --single-branch https://github.com/jepsen-io/jepsen.git
+RUN git clone -b $REPO_BRANCH --depth 1 --single-branch $REPO_URL
 WORKDIR /jepsen/jepsen/jepsen
 RUN lein install
 WORKDIR /
