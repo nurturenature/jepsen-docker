@@ -10,7 +10,11 @@ It's design:
 - accepts that such images are large
   - Debian using `systemd`
   - `jepsen-control` contains all packages needed by Jepsen's Control node
-  - `jepsen-node` contains the usual packages needed by a Jepsen Database node and its Nemeses
+  - `jepsen-node` contains
+    - `jepsen.os.debian` packages
+    - Nemeses
+      - build clock tools
+      - lazyfs
 - tries to be composable with other's docker-compose.yaml, e.g. the database being tested
 - primary use case is CI/CD/test/similar environments
   - when developing Jepsen tests, LXC/LXD or real VMs provide a superior experience
