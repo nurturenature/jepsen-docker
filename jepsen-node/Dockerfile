@@ -36,10 +36,17 @@ RUN apt-get -qy update && \
 # prep for jepsen.lazyfs
 ARG REPO_URL=https://github.com/dsrhaslab/lazyfs.git
 ARG REPO_DIR=/opt/jepsen/lazyfs
+ARG REPO_COMMIT=0.3.0
 RUN apt-get -qy update && \
     apt-get -qy install \
     cmake libfuse3-dev libfuse3-4 fuse3 g++ git
-RUN git clone $REPO_URL $REPO_DIR
+RUN git clone ${REPO_URL} ${REPO_DIR}
+WORKDIR ${REPO_DIR}
+RUN git fetch
+RUN git checkout ${REPO_COMMIT} 
+RUN git clean -fx
+RUN cd libs/libpcache && ./build.sh
+RUN cd lazyfs         && ./build.sh
 
 # Configure SSHD
 RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
