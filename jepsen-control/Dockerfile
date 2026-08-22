@@ -39,8 +39,10 @@ RUN rm -rf /jepsen
 
 # build/install latest Jepsen from GitHub repository
 # TODO: currently a fork to support additional lazyfs commands
-ARG REPO_URL=https://github.com/nurturenature/jepsen.git
-ARG REPO_BRANCH=jepsen.lazyfs-enhancements
+# ARG REPO_URL=https://github.com/nurturenature/jepsen.git
+# ARG REPO_BRANCH=jepsen.lazyfs-enhancements
+ARG REPO_URL=https://github.com/jepsen-io/jepsen.git
+ARG REPO_BRANCH=main
 WORKDIR /jepsen
 RUN git clone -b $REPO_BRANCH --depth 1 --single-branch $REPO_URL
 WORKDIR /jepsen/jepsen/jepsen

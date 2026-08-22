@@ -22,9 +22,9 @@ It's design:
 Images can be built locally, or images are published:
 
 - based on Debian 13/Trixie
-- install Jepsen `0.3.11`
-- build/install current development version, `0.3.12-SNAPSHOT`, of Jepsen from Jepsen's GitHub repository
-- built and published to the GitHub Container Registry every Sunday at 00:15
+- installs Jepsen `0.3.13`
+- builds/installs current development version, `0.3.14-SNAPSHOT`, of Jepsen from Jepsen's GitHub repository
+- published to the GitHub Container Registry every Sunday at 00:15
 - published at:
 
   ```bash
